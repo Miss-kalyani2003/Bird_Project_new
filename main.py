@@ -1,4 +1,5 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify,render_template
+
 import os
 from src.utils import load_trained_model, load_class_names, predict_image
 
@@ -42,6 +43,28 @@ def predict():
         "prediction": label,
         "confidence": f"{confidence:.2f}%"
     })
+
+@app.route("/", methods=["GET", "POST"])
+def ui():
+    prediction = None
+    confidence = None
+
+    if request.method == "POST":
+        file = request.files.get("image")
+        if file and file.filename != "":
+            image_path = os.path.join(UPLOAD_FOLDER, file.filename)
+            file.save(image_path)
+
+            prediction, confidence = predict_image(
+                model, class_names, image_path
+            )
+
+    return render_template(
+        "index.html",
+        prediction=prediction,
+        confidence=confidence
+    )
+
 
 if __name__ == "__main__":
     app.run(debug=True)
