@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bird Species Classification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h1>🦜 Bird Species Classification</h1>
+    <p class="subtitle">
+        Upload a bird image to predict its species using a deep learning model
+    </p>
+
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" required>
+        <button type="submit">Predict</button>
+    </form>
+
+    {% if prediction %}
+    <div class="result">
+        <h2>Prediction Result</h2>
+        <p><strong>Species:</strong> {{ prediction }}</p>
+        <p><strong>Confidence:</strong> {{ "%.2f"|format(confidence) }}%</p>
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>
